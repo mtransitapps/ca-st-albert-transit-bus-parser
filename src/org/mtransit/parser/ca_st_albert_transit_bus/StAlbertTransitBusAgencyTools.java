@@ -74,6 +74,10 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	private static final Pattern DIGITS = Pattern.compile("[\\d]+");
 
+	private static final String A = "A";
+	private static final String B = "B";
+	private static final String F = "F";
+
 	@Override
 	public long getRouteId(GRoute gRoute) {
 		if (Utils.isDigitsOnly(gRoute.route_id)) {
@@ -82,11 +86,11 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		Matcher matcher = DIGITS.matcher(gRoute.route_id);
 		matcher.find();
 		int id = Integer.parseInt(matcher.group());
-		if (gRoute.route_id.startsWith("A")) {
+		if (gRoute.route_id.startsWith(A)) {
 			return 1000 + id;
-		} else if (gRoute.route_id.startsWith("B")) {
+		} else if (gRoute.route_id.startsWith(B)) {
 			return 2000 + id;
-		} else if (gRoute.route_id.startsWith("F")) {
+		} else if (gRoute.route_id.startsWith(F)) {
 			return 6000 + id;
 		}
 		System.out.println("Unexpected route ID " + gRoute);
@@ -94,13 +98,16 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		return -1l;
 	}
 
+	private static final String RSN_FMS = "FMS";
+	private static final String RSN_BL = "BL";
+
 	@Override
 	public String getRouteShortName(GRoute gRoute) {
 		if (StringUtils.isEmpty(gRoute.route_short_name)) {
-			if ("F1".equals(gRoute.route_id)) {
-				return "FMS";
-			} else if ("B1".equals(gRoute.route_id)) {
-				return "BL";
+			if (RID_F1.equals(gRoute.route_id)) {
+				return RSN_FMS;
+			} else if (RID_B1.equals(gRoute.route_id)) {
+				return RSN_BL;
 			}
 		}
 		return super.getRouteShortName(gRoute);
@@ -210,6 +217,21 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public String getAgencyColor() {
 		return AGENCY_COLOR;
+	}
+
+	private static final String COLOR_ECFE25 = "ecfe25";
+	private static final String COLOR_702929 = "702929";
+
+	@Override
+	public String getRouteColor(GRoute gRoute) {
+		if (!Utils.isDigitsOnly(gRoute.route_id)) {
+			if (RID_B1.equalsIgnoreCase(gRoute.route_id)) {
+				if (gRoute.route_color.equalsIgnoreCase(COLOR_ECFE25)) {
+					return COLOR_702929;
+				}
+			}
+		}
+		return super.getRouteColor(gRoute);
 	}
 
 	private static final String EXCHANGE = "Ex";
