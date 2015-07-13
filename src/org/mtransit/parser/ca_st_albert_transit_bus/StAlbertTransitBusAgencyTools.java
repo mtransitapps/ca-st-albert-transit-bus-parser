@@ -36,7 +36,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void start(String[] args) {
-		System.out.printf("\nGenerating StAT bus data...\n");
+		System.out.printf("\nGenerating StAT bus data...");
 		long start = System.currentTimeMillis();
 		this.serviceIds = extractUsefulServiceIds(args, this);
 		super.start(args);
