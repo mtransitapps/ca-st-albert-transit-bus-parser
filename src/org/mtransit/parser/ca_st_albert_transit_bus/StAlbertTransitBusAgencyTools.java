@@ -306,9 +306,25 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, EDM_CITY_HALL) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "1364", "6152", "0971" })) //
+						Arrays.asList(new String[] { "1364", "6152", "0952", "0971" })) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { "0971", "1824", "1364" })) //
+				.compileBothTripSort());
+		map2.put(204l, new RouteTripSpec(204l, //
+				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
+				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, U_OF_ALBERTA) //
+				.addTripSort(MDirectionType.NORTH.intValue(), //
+						Arrays.asList(new String[] { "2636", "2749", "0962", "0971" })) //
+				.addTripSort(MDirectionType.SOUTH.intValue(), //
+						Arrays.asList(new String[] { "0971", "0175", "2636" })) //
+				.compileBothTripSort());
+		map2.put(208l, new RouteTripSpec(208l, //
+				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
+				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GOV_CTR) //
+				.addTripSort(MDirectionType.NORTH.intValue(), //
+						Arrays.asList(new String[] { "1302", "1898", "0972" })) //
+				.addTripSort(MDirectionType.SOUTH.intValue(), //
+						Arrays.asList(new String[] { "0972", "1643", "1304" })) //
 				.compileBothTripSort());
 		map2.put(RID_A + 2l, new RouteTripSpec(RID_A + 2l, // A2
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, HERITAGE_LKS, //
