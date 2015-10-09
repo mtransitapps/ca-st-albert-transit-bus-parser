@@ -285,8 +285,8 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public ArrayList<MTrip> splitTrip(MRoute mRoute, GTrip gTrip, GSpec gtfs) {
-		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.id)) {
-			return ALL_ROUTE_TRIPS2.get(mRoute.id).getAllTrips();
+		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
+			return ALL_ROUTE_TRIPS2.get(mRoute.getId()).getAllTrips();
 		}
 		return super.splitTrip(mRoute, gTrip, gtfs);
 	}
@@ -395,11 +395,11 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
-		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.id)) {
+		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
 			return; // split
 		}
 		String gTripHeadsignLC = gTrip.getTripHeadsign().toLowerCase(Locale.ENGLISH);
-		if (mRoute.id == 203l) {
+		if (mRoute.getId() == 203l) {
 			if (gTripHeadsignLC.equals(TO_ST_ALBERT)) {
 				mTrip.setHeadsignString(ST_ALBERT, 0);
 				return;
@@ -407,9 +407,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(U_OF_ALBERTA, 1);
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == 205l) {
+		} else if (mRoute.getId() == 205l) {
 			if (gTripHeadsignLC.equals(TO_ST_ALBERT)) {
 				mTrip.setHeadsignString(ST_ALBERT, 0);
 				return;
@@ -417,9 +417,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(WEST_EDMONTON_MALL, 1);
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == 209l) {
+		} else if (mRoute.getId() == 209l) {
 			if (gTripHeadsignLC.equals(TO_ST_ALBERT)) {
 				mTrip.setHeadsignString(ST_ALBERT, 0);
 				return;
@@ -427,9 +427,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(GOV_CTR, 1);
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 1l) { // A1
+		} else if (mRoute.getId() == RID_A + 1l) { // A1
 			if (gTripHeadsignLC.equals(TO_ST_ALBERT_EXCHANGE_CENTRE)) {
 				mTrip.setHeadsignString(ST_ALBERT_EXCHANGE_CENTER, 0);
 				return;
@@ -437,37 +437,37 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(VILLAGE_TRANSIT_STATION, 1);
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 4l) { // A4
+		} else if (mRoute.getId() == RID_A + 4l) { // A4
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(CLOCKWISE, gTrip.getDirectionId());
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 5l) { // A5
+		} else if (mRoute.getId() == RID_A + 5l) { // A5
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(COUNTER_CLOCKWISE, gTrip.getDirectionId());
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 7l) { // A7
+		} else if (mRoute.getId() == RID_A + 7l) { // A7
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(CLOCKWISE, gTrip.getDirectionId());
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 8l) { // A8
+		} else if (mRoute.getId() == RID_A + 8l) { // A8
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(COUNTER_CLOCKWISE, gTrip.getDirectionId());
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 9l) { // A9
+		} else if (mRoute.getId() == RID_A + 9l) { // A9
 			if (gTripHeadsignLC.equals(TO_ST_ALBERT_EXCHANGE)) {
 				mTrip.setHeadsignString(ST_ALBERT_EXCHANGE_CENTER, 0);
 				return;
@@ -475,9 +475,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(VILLAGE_TRANSIT_STATION, 1);
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_A + 11l) { // A11
+		} else if (mRoute.getId() == RID_A + 11l) { // A11
 			if (gTripHeadsignLC.equals(TO_ST_ALBERT_EXCHANGE)) {
 				mTrip.setHeadsignString(ST_ALBERT_EXCHANGE_CENTER, 0);
 				return;
@@ -485,9 +485,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(VILLAGE_TRANSIT_STATION, 1);
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
-		} else if (mRoute.id == RID_B + 1l) { // B1
+		} else if (mRoute.getId() == RID_B + 1l) { // B1
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(BOTANICAL_PARK, gTrip.getDirectionId());
 				return;
@@ -495,7 +495,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(ENJOY_CENTER, gTrip.getDirectionId());
 				return;
 			}
-			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.id, gTrip);
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
 		}
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
@@ -503,8 +503,8 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public Pair<Long[], Integer[]> splitTripStop(MRoute mRoute, GTrip gTrip, GTripStop gTripStop, ArrayList<MTrip> splitTrips, GSpec routeGTFS) {
-		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.id)) {
-			return SplitUtils.splitTripStop(mRoute, gTrip, gTripStop, routeGTFS, ALL_ROUTE_TRIPS2.get(mRoute.id));
+		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
+			return SplitUtils.splitTripStop(mRoute, gTrip, gTripStop, routeGTFS, ALL_ROUTE_TRIPS2.get(mRoute.getId()));
 		}
 		return super.splitTripStop(mRoute, gTrip, gTripStop, splitTrips, routeGTFS);
 	}
