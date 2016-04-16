@@ -556,4 +556,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		gStopName = CleanUtils.cleanNumbers(gStopName);
 		return CleanUtils.cleanLabel(gStopName);
 	}
+
+	@Override
+	public String getStopCode(GStop gStop) {
+		if (StringUtils.isEmpty(gStop.getStopCode()) || "0".equals(gStop.getStopCode())) {
+			return String.valueOf(gStop.getStopId());
+		}
+		return super.getStopCode(gStop);
+	}
 }
