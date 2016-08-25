@@ -300,17 +300,39 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, EDM_CITY_HALL) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "1123", "1989", "0959", "0962", "0971" })) //
+						Arrays.asList(new String[] { //
+						"1123", "1989", //
+								"0915", // !=
+								"0959", // ==
+								"0962", // !=
+								"0129", // !=
+								"0971" // ==
+						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0971", "0959", "6272", "1123" })) //
+						Arrays.asList(new String[] { //
+						"0971", //
+								"0175", // !=
+								"0959", // ==
+								"0917", // ==
+								"6272", //
+								"1123" //
+						})) //
 				.compileBothTripSort());
 		map2.put(202l, new RouteTripSpec(202l, //
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, EDM_CITY_HALL) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "1107", "1227", "6152", "0951", "0971" })) //
+						Arrays.asList(new String[] { //
+						"1107", "1227", "6152", //
+								"6381", // ==
+								"0958", // !=
+								"0951", // !=
+								"0971" //
+						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0971", "0958", "1107" })) //
+						Arrays.asList(new String[] { //
+						"0971", "0958", "1107" //
+						})) //
 				.compileBothTripSort());
 		map2.put(204l, new RouteTripSpec(204l, //
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
@@ -357,18 +379,17 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, NORTH_RIDGE) //
 				.addTripSort(MDirectionType.EAST.intValue(), //
 						Arrays.asList(new String[] { //
-						"0224", // !=
-								"0222", "0210", // !=
-								"0803", // ==
-								"0427", "0973", //
-								"0951" })) //
+						"0220", //
+								"0973", //
+								"0951" //
+						})) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
 						Arrays.asList(new String[] { //
 						"0951", //
-								"0973", "0497", //
-								"0805", // ==
-								"0198", "0224", // !=
-								"0222" // !=
+								"0973", // ==
+								"0835", "0903", // !=
+								"0837", "0391", // !=
+								"0220"//
 						})) //
 				.compileBothTripSort());
 		map2.put(RID_A + 10l, new RouteTripSpec(RID_A + 10l, // A10
@@ -422,7 +443,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		}
 		String gTripHeadsignLC = gTrip.getTripHeadsign().toLowerCase(Locale.ENGLISH);
 		if (mRoute.getId() == 203l) {
-			if (gTripHeadsignLC.equals(TO_ST_ALBERT)) {
+			if (gTripHeadsignLC.startsWith(TO_ST_ALBERT)) {
 				mTrip.setHeadsignString(ST_ALBERT, 0);
 				return;
 			} else if (gTripHeadsignLC.equals(TO_UNIVERSITY_OF_ALBERTA)) {
