@@ -267,15 +267,17 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String COUNTER_CLOCKWISE = "Counter-Clockwise";
 	private static final String CLOCKWISE = "Clockwise";
 
-	private static final String UNEXPECTED_TRIP_ROUTE_ID_S_S = "Unexpected trip (route ID: %s): %s\n";
+	private static final String UNEXPECTED_TRIP_ROUTE_ID_S_S = "\nUnexpected trip (route ID: %s): %s\n";
 
-	private static final String TO_ST_ALBERT_EXCHANGE = "to st. albert exchange";
+	private static final String ST_ALBERT_ = "st. albert";
+	private static final String TO_ST_ALBERT_EXCHANGE = "to " + ST_ALBERT_ + " exchange";
 	private static final String TO_VILLAGE_TRANSIT_STATION = "to village transit station";
-	private static final String TO_ST_ALBERT_EXCHANGE_CENTRE = "to st. albert exchange centre";
+	private static final String TO_ST_ALBERT_EXCHANGE_CENTRE = TO_ST_ALBERT_EXCHANGE + " centre";
 	private static final String TO_GOVERNMENT_CENTRE = "to government centre";
-	private static final String TO_WEST_EDMONTON_MALL = "to west edmonton mall";
+	private static final String EDMONTON_ = "edmonton";
+	private static final String TO_WEST_EDMONTON_MALL = "to west " + EDMONTON_ + " mall";
 	private static final String TO_UNIVERSITY_OF_ALBERTA = "to university of alberta";
-	private static final String TO_ST_ALBERT = "to st. albert";
+	private static final String TO_ST_ALBERT = "to " + ST_ALBERT_;
 
 	@Override
 	public int compareEarly(long routeId, List<MTripStop> list1, List<MTripStop> list2, MTripStop ts1, MTripStop ts2, GStop ts1GStop, GStop ts2GStop) {
@@ -453,7 +455,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
 			System.exit(-1);
 		} else if (mRoute.getId() == 205l) {
-			if (gTripHeadsignLC.equals(TO_ST_ALBERT)) {
+			if (gTripHeadsignLC.startsWith(TO_ST_ALBERT)) {
 				mTrip.setHeadsignString(ST_ALBERT, 0);
 				return;
 			} else if (gTripHeadsignLC.equals(TO_WEST_EDMONTON_MALL)) {
@@ -468,6 +470,16 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return;
 			} else if (gTripHeadsignLC.equals(TO_GOVERNMENT_CENTRE)) {
 				mTrip.setHeadsignString(GOV_CTR, 1);
+				return;
+			}
+			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
+			System.exit(-1);
+		} else if (mRoute.getId() == 211l) {
+			if (gTripHeadsignLC.startsWith(ST_ALBERT_)) {
+				mTrip.setHeadsignString(ST_ALBERT, 0);
+				return;
+			} else if (gTripHeadsignLC.startsWith(EDMONTON_)) {
+				mTrip.setHeadsignString(EDMONTON, 1);
 				return;
 			}
 			System.out.printf(UNEXPECTED_TRIP_ROUTE_ID_S_S, mRoute.getId(), gTrip);
@@ -542,6 +554,13 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			System.exit(-1);
 		}
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
+	}
+
+	@Override
+	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
+		System.out.printf("\nUnexpected trips to merge %s & %s!\n", mTrip, mTripToMerge);
+		System.exit(-1);
+		return false;
 	}
 
 	@Override
