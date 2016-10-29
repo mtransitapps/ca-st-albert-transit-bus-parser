@@ -340,9 +340,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, U_OF_ALBERTA) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "2636", "2749", "0962", "0971" })) //
+						Arrays.asList(new String[] { "2636", "2749", "0962", "0971", "0972" })) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0971", "0175", "2636" })) //
+						Arrays.asList(new String[] { "0972", "0971", "0175", "2636" })) //
 				.compileBothTripSort());
 		map2.put(207l, new RouteTripSpec(207l, //
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
@@ -356,9 +356,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, GOV_CTR) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "1302", "1898", "0971" })) //
+						Arrays.asList(new String[] { "1302", "1898", "0962", "0971" })) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0971", "1643", "1304" })) //
+						Arrays.asList(new String[] { "0971", "0960", "1643", "1304" })) //
 				.compileBothTripSort());
 		map2.put(RID_A + 2l, new RouteTripSpec(RID_A + 2l, // A2
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, HERITAGE_LKS, //
@@ -423,9 +423,18 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, COSTCO, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "0951", "0065", "0974", "0909", "0925", "0250" })) //
+						Arrays.asList(new String[] { //
+						"0951", "0974", //
+								"0899", // ==
+								"0909", "0841", // !=
+								"0102", // !=
+								"0925", // !=
+								"0250" // ==
+						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0250", "0925", "0971", "0113", "0951" })) //
+						Arrays.asList(new String[] { //
+						"0250", "0925", "0505", "0971", "0951" //
+						})) //
 				.compileBothTripSort());
 		map2.put(RID_A + 21l, new RouteTripSpec(RID_A + 21l, // A21
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION, //
