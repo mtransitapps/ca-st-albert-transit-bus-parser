@@ -398,9 +398,19 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION, //
 				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, PINEVIEW) //
 				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { "0221", "0267", "0955" })) //
+						Arrays.asList(new String[] { //
+						"0221", // Franklin Pl./S.W.C. Av.
+								"0267", //
+								"0955" // Village Transit Station
+						})) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { "0955", "0205", "0221" })) //
+						Arrays.asList(new String[] { //
+						"0955", // Village Transit Station
+								"0203", // ==
+								"0205", "0215", // !=
+								"0895", //
+								"0221" // Franklin Pl./S.W.C. Av.
+						})) //
 				.compileBothTripSort());
 		map2.put(RID_A + 12l, new RouteTripSpec(RID_A + 12l, // A12
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, CAMPBELL, //
