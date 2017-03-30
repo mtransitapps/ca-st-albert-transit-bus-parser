@@ -29,8 +29,8 @@ import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
 import org.mtransit.parser.mt.data.MTripStop;
 
-// http://stalbert.ca/getting-around/stat-transit/rider-tools/open-data-gtfs/
-// http://stalbert.ca/uploads/files-zip/google_transit.zip
+// https://stalbert.ca/city/transit/rider-tools/open-data-gtfs/
+// https://stalbert.ca/uploads/files-zip/google_transit.zip
 public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
@@ -91,6 +91,8 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	private static final long RID_A = 1000l;
 	private static final long RID_B = 2000l;
+	private static final long RID_C = 3000l;
+	private static final long RID_CH = 800000L + RID_C;
 	private static final long RID_F = 6000l;
 
 	@Override
@@ -98,15 +100,19 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		if (Utils.isDigitsOnly(gRoute.getRouteId())) {
 			return Long.parseLong(gRoute.getRouteId());
 		}
+		if ("CH".equalsIgnoreCase(gRoute.getRouteId())) {
+			return RID_CH;
+		}
 		Matcher matcher = DIGITS.matcher(gRoute.getRouteId());
-		matcher.find();
-		long id = Long.parseLong(matcher.group());
-		if (gRoute.getRouteId().startsWith(A)) {
-			return RID_A + id;
-		} else if (gRoute.getRouteId().startsWith(B)) {
-			return RID_B + id;
-		} else if (gRoute.getRouteId().startsWith(F)) {
-			return RID_F + id;
+		if (matcher.find()) {
+			long id = Long.parseLong(matcher.group());
+			if (gRoute.getRouteId().startsWith(A)) {
+				return RID_A + id;
+			} else if (gRoute.getRouteId().startsWith(B)) {
+				return RID_B + id;
+			} else if (gRoute.getRouteId().startsWith(F)) {
+				return RID_F + id;
+			}
 		}
 		System.out.printf("\nUnexpected route ID %s!\n", gRoute);
 		System.exit(-1);
