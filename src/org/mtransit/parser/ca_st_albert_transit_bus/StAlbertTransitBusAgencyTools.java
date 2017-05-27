@@ -94,6 +94,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_C = 3000l;
 	private static final long RID_CH = 800000L + RID_C;
 	private static final long RID_F = 6000l;
+	private static final long RID_R = 18000l;
+	private static final long RID_RA = 1800000L + RID_A;
+	private static final long RID_RR = 1800000L + RID_R;
 
 	@Override
 	public long getRouteId(GRoute gRoute) {
@@ -102,6 +105,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		}
 		if ("CH".equalsIgnoreCase(gRoute.getRouteId())) {
 			return RID_CH;
+		}
+		if ("RA".equalsIgnoreCase(gRoute.getRouteId())) {
+			return RID_RA;
+		}
+		if ("RR".equalsIgnoreCase(gRoute.getRouteId())) {
+			return RID_RR;
 		}
 		Matcher matcher = DIGITS.matcher(gRoute.getRouteId());
 		if (matcher.find()) {
@@ -119,20 +128,22 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		return -1l;
 	}
 
-	private static final String RSN_FMS = "FMS";
-	private static final String RSN_BL = "BL";
-	private static final String RSN_CH = "CH";
-
 	@Override
 	public String getRouteShortName(GRoute gRoute) {
 		if (StringUtils.isEmpty(gRoute.getRouteShortName())) {
 			if (RID_F1.equals(gRoute.getRouteId())) {
-				return RSN_FMS;
+				return "FMS";
 			} else if (RID_B1.equals(gRoute.getRouteId())) {
-				return RSN_BL;
+				return "BL";
 			}
 			if ("CH".equals(gRoute.getRouteId())) {
-				return RSN_CH;
+				return "CH";
+			}
+			if ("RA".equals(gRoute.getRouteId())) {
+				return "RA";
+			}
+			if ("RR".equals(gRoute.getRouteId())) {
+				return "RR";
 			}
 			System.out.printf("\nUnexpected route short name %s!\n", gRoute);
 			System.exit(-1);
@@ -172,11 +183,13 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String RLN_A11 = "Akinsdale - " + CAMPBELL + " - " + PINEVIEW + " - Woodlands - Perron St";
 	private static final String RLN_A12 = "Akinsdale - " + PINEVIEW + " - " + CAMPBELL;
 	private static final String RLN_A13 = "Akinsdale - " + PINEVIEW + " - " + WOODLANDS;
+	private static final String RLN_A14 = VILLAGE_TRANSIT_STATION_SHORT + " - St Albert Ctr - Summit Ctr - Sturgeon Hosp - " + COSTCO;
 	private static final String RLN_A21 = ENJOY_CENTER + " - Riel -  St Anne - " + VILLAGE_TRANSIT_STATION_SHORT;
 	private static final String RLN_B1 = "Botanical Loop";
 	private static final String RLN_CH = "Children's Festival Shuttle";
 	private static final String RLN_F1 = "Farmers Mkt Shuttle";
-	private static final String RLN_A14 = VILLAGE_TRANSIT_STATION_SHORT + " - St Albert Ctr - Summit Ctr - Sturgeon Hosp - " + COSTCO;
+	private static final String RLN_RA = "Rock n August";
+	private static final String RLN_RR = "Rainmaker Rodeo Shuttle";
 	private static final String RLN_201 = /* ST_ALBERT + " - " + */EDMONTON + " via Kingsway"/* + " - " + COMMUTER_SERVICE */;
 	private static final String RLN_202 = /* ST_ALBERT + " - " + */EDMONTON + " via NAIT & MacEwan"/* + " - " + COMMUTER_SERVICE */;
 	private static final String RLN_203 = /* ST_ALBERT + " - " + */U_OF_ALBERTA + " via Westmount"/* + " - " + COMMUTER_SERVICE */;
@@ -231,6 +244,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			// @formatter:on
 			if ("CH".equalsIgnoreCase(gRoute.getRouteId())) {
 				return RLN_CH;
+			}
+			if ("RA".equalsIgnoreCase(gRoute.getRouteId())) {
+				return RLN_RA;
+			}
+			if ("RR".equalsIgnoreCase(gRoute.getRouteId())) {
+				return RLN_RR;
 			}
 		} else {
 			int rsn = Integer.parseInt(gRoute.getRouteShortName());
@@ -392,7 +411,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"0377", // St Albert Rd./St-Vital Av
+						"A", // A - TEMP SACE BAY A
 								"0960", //
 								"1643", //
 								"1304", // Government Ctr./107 St. (SB)
@@ -493,7 +512,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"J", // TEMP SACE BAY J
 								"0925", // Save on Foods/St Albert Rd.
 								"0505", //
-								"0377", // St Albert Rd./St-Vital Av.
+								"A", // A - TEMP SACE BAY A
 								"0951", // Village Transit Station
 						})) //
 				.compileBothTripSort());
@@ -628,6 +647,16 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
+		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
+		if (mTrip.getRouteId() == RID_RR) {
+			if (Arrays.asList( //
+					"Rodeo (Parade Detour)", //
+					"Rodeo" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Rodeo", mTrip.getHeadsignId());
+				return true;
+			}
+		}
 		System.out.printf("\nUnexpected trips to merge %s & %s!\n", mTrip, mTripToMerge);
 		System.exit(-1);
 		return false;
@@ -674,9 +703,16 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final Pattern NAIT = Pattern.compile("N.A.I.T.", Pattern.CASE_INSENSITIVE);
 	private static final String NAIT_REPLACEMENT = "NAIT";
 
+	private static final Pattern STARTS_WITH_STOP_CODE = Pattern.compile("(" //
+			+ "^[0-9]{4,5}[\\s]*\\-[\\s]*" //
+			+ "|" //
+			+ "^[A-Z]{1}[\\s]*\\-[\\s]*" //
+			+ ")", Pattern.CASE_INSENSITIVE);
+
 	@Override
 	public String cleanStopName(String gStopName) {
 		gStopName = CleanUtils.cleanSlashes(gStopName);
+		gStopName = STARTS_WITH_STOP_CODE.matcher(gStopName).replaceAll(StringUtils.EMPTY);
 		gStopName = EXCHANGE_.matcher(gStopName).replaceAll(EXCHANGE_REPLACEMENT);
 		gStopName = GOVERNMENT_CENTRE.matcher(gStopName).replaceAll(GOVERNMENT_CENTRE_REPLACEMENT);
 		gStopName = UNIVERSITY_OF_ALBERTA.matcher(gStopName).replaceAll(UNIVERSITY_OF_ALBERTA_REPLACEMENT);
@@ -696,28 +732,36 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		}
 		return super.getStopCode(gStop);
 	}
+
 	@Override
 	public int getStopId(GStop gStop) {
 		if (!Utils.isDigitsOnly(gStop.getStopId())) {
-			if ("B".equals(gStop.getStopId())) {
+			if ("A".equals(gStop.getStopId())) {
+				return 10000;
+			} else if ("B".equals(gStop.getStopId())) {
 				return 20000;
+			} else if ("C".equals(gStop.getStopId())) {
+				return 30000;
 			} else if ("D".equals(gStop.getStopId())) {
 				return 40000;
 			} else if ("E".equals(gStop.getStopId())) {
 				return 50000;
 			} else if ("F".equals(gStop.getStopId())) {
-				return 70000;
+				return 60000;
 			} else if ("G".equals(gStop.getStopId())) {
-				return 80000;
+				return 70000;
 			} else if ("H".equals(gStop.getStopId())) {
-				return 90000;
+				return 80000;
 			} else if ("I".equals(gStop.getStopId())) {
-				return 100000;
+				return 90000;
 			} else if ("J".equals(gStop.getStopId())) {
-				return 110000;
+				return 100000;
 			} else if ("K".equals(gStop.getStopId())) {
 				return 110000;
 			}
+			System.out.printf("\nUnexpected stop ID for %s!\n", gStop);
+			System.exit(-1);
+			return -1;
 		}
 		return super.getStopId(gStop);
 	}
