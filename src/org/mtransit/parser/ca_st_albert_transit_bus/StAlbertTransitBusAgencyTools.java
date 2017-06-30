@@ -92,6 +92,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_A = 1000l;
 	private static final long RID_B = 2000l;
 	private static final long RID_C = 3000l;
+	private static final long RID_C1 = 800000L + 1L;
 	private static final long RID_CH = 800000L + RID_C;
 	private static final long RID_F = 6000l;
 	private static final long RID_R = 18000l;
@@ -102,6 +103,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	public long getRouteId(GRoute gRoute) {
 		if (Utils.isDigitsOnly(gRoute.getRouteId())) {
 			return Long.parseLong(gRoute.getRouteId());
+		}
+		if ("C1".equalsIgnoreCase(gRoute.getRouteId())) {
+			return RID_C1;
 		}
 		if ("CH".equalsIgnoreCase(gRoute.getRouteId())) {
 			return RID_CH;
@@ -135,6 +139,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return "FMS";
 			} else if (RID_B1.equals(gRoute.getRouteId())) {
 				return "BL";
+			}
+			if ("C1".equals(gRoute.getRouteId())) {
+				return "C1";
 			}
 			if ("CH".equals(gRoute.getRouteId())) {
 				return "CH";
@@ -186,6 +193,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String RLN_A14 = VILLAGE_TRANSIT_STATION_SHORT + " - St Albert Ctr - Summit Ctr - Sturgeon Hosp - " + COSTCO;
 	private static final String RLN_A21 = ENJOY_CENTER + " - Riel -  St Anne - " + VILLAGE_TRANSIT_STATION_SHORT;
 	private static final String RLN_B1 = "Botanical Loop";
+	private static final String RLN_C1 = "Canada Day Shuttle";
 	private static final String RLN_CH = "Children's Festival Shuttle";
 	private static final String RLN_F1 = "Farmers Mkt Shuttle";
 	private static final String RLN_RA = "Rock n August";
@@ -242,6 +250,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			} else if (RID_F1.equalsIgnoreCase(gRoute.getRouteId())) { return RLN_F1;
 			}
 			// @formatter:on
+			if ("C1".equalsIgnoreCase(gRoute.getRouteId())) {
+				return RLN_C1;
+			}
 			if ("CH".equalsIgnoreCase(gRoute.getRouteId())) {
 				return RLN_CH;
 			}
@@ -503,15 +514,17 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"0899", // ==
 								"0909", // !=
 								"0841", // !=
-								"0925", // != Save on Foods/St Albert Rd.
+								"0925", // != Save on Foods/St Albert Rd. => VILLAGE_TRANSIT_STATION
+								"0300", // !=
 								"0250", // == Element Dr. N/Costco
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { //
 						"0250", // Element Dr. N/Costco
-								"J", // TEMP SACE BAY J
 								"0925", // Save on Foods/St Albert Rd.
-								"0505", //
+								"0068", // !=
+								"0847", // !=
+								"0505", // ==
 								"A", // A - TEMP SACE BAY A
 								"0951", // Village Transit Station
 						})) //
@@ -520,9 +533,18 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION, //
 				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, ENJOY_CENTER) //
 				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { "0252", "0094", "0953" })) //
+						Arrays.asList(new String[] { //
+						"0304", // Enjoy Centre South (NB)
+								"0094", // ++
+								"0953", // Village Transit Station
+						})) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { "0953", "0113", "0252" })) //
+						Arrays.asList(new String[] { //
+						"0953", // Village Transit Station
+								"0113", // ++
+								"0252", // ++
+								"0304", // Enjoy Centre South (NB)
+						})) //
 				.compileBothTripSort());
 		ALL_ROUTE_TRIPS2 = map2;
 	}
