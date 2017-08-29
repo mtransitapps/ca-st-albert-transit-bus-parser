@@ -352,22 +352,21 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, EDM_CITY_HALL) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"1123", // 103A Av./ City Hall (WB)
+						"1439", // 103A Av./ 101 St.(EB)
 								"1989", // 107 St./104 Av. (MacEwan) (WB)
 								"0915", // !=
 								"0959", // == Village Transit Station
 								"0962", // !=
-								"0129", // !=
-								"G", // TEMP SACE BAY G
+								"0971", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"G", // TEMP SACE BAY G
+						"0971", // St. Albert Centre Exchange
 								"0175", // !=
 								"0959", // == Village Transit Station
 								"0917", // ==
 								"6272", //
-								"1123", // 103A Av./ City Hall (WB)
+								"1439", // 103A Av./ 101 St.(EB)
 						})) //
 				.compileBothTripSort());
 		map2.put(202l, new RouteTripSpec(202l, //
@@ -376,36 +375,55 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
 						"1107", // 111 Av/RAH Transit Centre
-								"1227", //
-								"6152", //
+								"1024", // 111 Av./ 102 St. (EB)
+								"1227", // ++
+								"6152", // ++
 								"6381", // ==
-								"0958", // != Village Transit Station
+								"0958", // != <> Village Transit Station
 								"0951", // !=
-								"D", // TEMP SACE BAY D
+								"0971", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"D", // TEMP SACE BAY D
-								"0958", // Village Transit Station
+						"0971", // St. Albert Centre Exchange
+								"0125", // !=
+								"0958", // <> Village Transit Station
+								"0917", // ==
+								"6424", // !=
+								"6272", // !=
+								"1223", // ==
+								"1226", // ++
 								"1107", // 111 Av/RAH Transit Centre
+								"1024", // 111 Av./ 102 St. (EB
 						})) //
 				.compileBothTripSort());
 		map2.put(204l, new RouteTripSpec(204l, //
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, U_OF_ALBERTA) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "2636", "2749", "0962", "0971", "0972" })) //
+						Arrays.asList(new String[] { //
+						"2636", // University Transit Centre
+								"2749", // ++
+								"0962", // Village Transit Station
+								"0972", // St. Albert Centre Exchange
+						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0972", "0971", "0175", "2636" })) //
+						Arrays.asList(new String[] { //
+						"0972", // St. Albert Centre Exchange
+								"0175", // ++
+								"0957", // Village Transit Station
+								"2636", // University Transit Centre
+						})) //
 				.compileBothTripSort());
 		map2.put(207l, new RouteTripSpec(207l, //
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, EDM_CITY_HALL) //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"1123", // 103A Av./ City Hall (WB)
-								"1903", //
-								"G", // TEMP SACE BAY G
+						"1439", // 103A Av./ 101 St.(EB)
+								"1123", // 103A Av./ City Hall (WB)
+								"1903", // ++
+								"0971", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { /* no stops */})) //
@@ -416,15 +434,15 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
 						"1302", // Government Ctr./107 St. (NB)
-								"1898", //
-								"0962", //
-								"K", // TEMP SACE BAY K
+								"1898", // ++
+								"0962", // ++
+								"0971", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"A", // A - TEMP SACE BAY A
-								"0960", //
-								"1643", //
+						"0971", // St. Albert Centre Exchange
+								"0960", // Village Transit Station
+								"1643", // ++
 								"1304", // Government Ctr./107 St. (SB)
 						})) //
 				.compileBothTripSort());
@@ -458,13 +476,17 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(MDirectionType.EAST.intValue(), //
 						Arrays.asList(new String[] { //
 						"0220", // Villeange Rd./Versailles Ave.
-								"J", // TEMP SACE BAY J
+								"0839", // ++
+								"0973", // St. Albert Centre Exchange
+								"0169", // ++
 								"0951" // Village Transit Station
 						})) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
 						Arrays.asList(new String[] { //
 						"0951", // Village Transit Station
-								"K", // TEMP SACE BAY K
+								"0069", // ++
+								"0973", // St. Albert Centre Exchange
+								"0837", // ++
 								"0837", "0391", // !=
 								"0220"// Villeange Rd./Versailles Ave.
 						})) //
@@ -510,7 +532,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
 						"0951", // Village Transit Station
-								"J", // TEMP SACE BAY J
+								"0974", // St. Albert Centre Exchange
 								"0899", // ==
 								"0909", // !=
 								"0841", // !=
@@ -525,7 +547,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"0068", // !=
 								"0847", // !=
 								"0505", // ==
-								"A", // A - TEMP SACE BAY A
+								"0971", // St. Albert Centre Exchange
 								"0951", // Village Transit Station
 						})) //
 				.compileBothTripSort());
@@ -553,6 +575,10 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
 			return; // split
+		}
+		if (!isGoodEnoughAccepted()) {
+			mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
+			return;
 		}
 		String gTripHeadsignLC = gTrip.getTripHeadsign().toLowerCase(Locale.ENGLISH);
 		if (mRoute.getId() == 203l) {
