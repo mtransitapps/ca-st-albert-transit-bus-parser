@@ -321,7 +321,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public int compareEarly(long routeId, List<MTripStop> list1, List<MTripStop> list2, MTripStop ts1, MTripStop ts2, GStop ts1GStop, GStop ts2GStop) {
 		if (ALL_ROUTE_TRIPS2.containsKey(routeId)) {
-			return ALL_ROUTE_TRIPS2.get(routeId).compare(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop);
+			return ALL_ROUTE_TRIPS2.get(routeId).compare(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop, this);
 		}
 		return super.compareEarly(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop);
 	}
@@ -584,6 +584,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(0, //
 						Arrays.asList(new String[] { //
 						"0954", // Village Transit Station
+								"0229", // Westwood Dr_SB_NS_Windsor Cres
 								"0972", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(1, //
@@ -652,6 +653,25 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"0304", // Enjoy Centre South (NB)
 						})) //
 				.compileBothTripSort());
+		map2.put(RID_B + 1L, new RouteTripSpec(RID_B + 1L, // B1
+				0, MTrip.HEADSIGN_TYPE_STRING, "Botanic Pk", //
+				1, MTrip.HEADSIGN_TYPE_STRING, "Enjoy Ctr") //
+				.addTripSort(0, //
+						Arrays.asList(new String[] { //
+						"0252", // Riel Dr_SB_FS_Enjoy Centre South
+								"0765", // !=
+								"0971", // <>
+								"0226", // != Sturgeon Rd_WB_FS_Sturgeon Rd
+						})) //
+				.addTripSort(1, //
+						Arrays.asList(new String[] { //
+						"0226", // != Sturgeon Rd_WB_FS_Sturgeon Rd
+								"0971", // <>
+								"0763", // !=
+								"0228", // Riel Dr_SB_NS_Enjoy Centre North
+								"0252", // Riel Dr_SB_FS_Enjoy Centre South
+						})) //
+				.compileBothTripSort());
 		ALL_ROUTE_TRIPS2 = map2;
 	}
 
@@ -718,7 +738,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public Pair<Long[], Integer[]> splitTripStop(MRoute mRoute, GTrip gTrip, GTripStop gTripStop, ArrayList<MTrip> splitTrips, GSpec routeGTFS) {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
-			return SplitUtils.splitTripStop(mRoute, gTrip, gTripStop, routeGTFS, ALL_ROUTE_TRIPS2.get(mRoute.getId()));
+			return SplitUtils.splitTripStop(mRoute, gTrip, gTripStop, routeGTFS, ALL_ROUTE_TRIPS2.get(mRoute.getId()), this);
 		}
 		return super.splitTripStop(mRoute, gTrip, gTripStop, splitTrips, routeGTFS);
 	}
