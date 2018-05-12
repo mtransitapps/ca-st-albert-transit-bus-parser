@@ -30,7 +30,7 @@ import org.mtransit.parser.mt.data.MTrip;
 import org.mtransit.parser.mt.data.MTripStop;
 
 // https://stalbert.ca/city/transit/rider-tools/open-data-gtfs/
-// https://stalbert.ca/uploads/files-zip/google_transit.zip
+// https://stalbert.ca/uploads/files-zip/google_transit2.zip
 public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
