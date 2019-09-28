@@ -189,7 +189,6 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String COSTCO = "Costco";
 	private static final String ENJOY_CENTER = "Enjoy Ctr";
 	private static final String PINEVIEW = "Pineview";
-	private static final String LOOP = "Loop";
 	private static final String KINGSWOOD = "Kingswood";
 
 	private static final String ST_ALBERT_EXCHANGE_CENTER = ST_ALBERT + " " + EXCHANGE + " Ctr";
@@ -499,69 +498,62 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
 			return; // split
 		}
+		if (mTrip.getRouteId() == RID_A + 5L) { // A5
+			if (gTrip.getTripHeadsign().endsWith(" " + "Lacombe Park")) {
+				mTrip.setHeadsignString(cleanTripHeadsign("Lacombe Park"), gTrip.getDirectionId());
+				return;
+			}
+			if (gTrip.getTripHeadsign().endsWith(" " + "Village Station")) {
+				mTrip.setHeadsignString(cleanTripHeadsign("Village Station"), gTrip.getDirectionId());
+				return;
+			}
+		}
+		if (mTrip.getRouteId() == RID_A + 7L) { // A7
+			if (gTrip.getTripHeadsign().endsWith(" " + "Oakmont")) {
+				mTrip.setHeadsignString(cleanTripHeadsign("Oakmont"), gTrip.getDirectionId());
+				return;
+			}
+		}
+		if (mTrip.getRouteId() == RID_A + 8L) { // A8
+			if (gTrip.getTripHeadsign().endsWith(" " + "Erin Ridge")) {
+				mTrip.setHeadsignString(cleanTripHeadsign("Erin Ridge"), gTrip.getDirectionId());
+				return;
+			}
+		}
+		if (mTrip.getRouteId() == RID_A + 12L) { // A12
+			if (gTrip.getTripHeadsign().endsWith(" " + "Campbell")) {
+				mTrip.setHeadsignString(cleanTripHeadsign("Campbell"), gTrip.getDirectionId());
+				return;
+			}
+		}
 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
 	}
 
 	@Override
 	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
 		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
-		if (mTrip.getRouteId() == RID_A + 4L) { // A4
+		if (mTrip.getRouteId() == RID_A + 5L) { // A5
 			if (Arrays.asList( //
-					"Saturday", //
-					LOOP //
-					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(LOOP, mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == RID_A + 5L) { // A5
-			if (Arrays.asList( //
-					"Saturday", //
-					VILLAGE_TRANSIT_STATION, //
-					LOOP //
-					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(LOOP, mTrip.getHeadsignId());
+					"Lacombe Pk", //
+					"Vlg Sta" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Vlg Sta", mTrip.getHeadsignId());
 				return true;
 			}
 		} else if (mTrip.getRouteId() == RID_A + 6L) { // A6
 			if (Arrays.asList( //
 					VILLAGE_TRANSIT_STATION, //
-					ST_ALBERT_CENTER).containsAll(headsignsValues)) {
+					ST_ALBERT_CENTER //
+					).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString(ST_ALBERT_CENTER, mTrip.getHeadsignId());
 				return true;
 			}
-		} else if (mTrip.getRouteId() == RID_A + 7L) { // A7
-			if (Arrays.asList( //
-					"Saturday", //
-					VILLAGE_TRANSIT_STATION, //
-					LOOP //
-					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(LOOP, mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == RID_A + 8L) { // A8
-			if (Arrays.asList( //
-					"Saturday", //
-					ST_ALBERT_CENTER, //
-					LOOP //
-					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(LOOP, mTrip.getHeadsignId());
-				return true;
-			}
-
 		} else if (mTrip.getRouteId() == RID_A + 9L) { // A9
 			if (Arrays.asList( //
 					KINGSWOOD, //
 					VILLAGE_TRANSIT_STATION //
 					).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString(VILLAGE_TRANSIT_STATION, mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == RID_A + 12L) { // A12
-			if (Arrays.asList( //
-					CAMPBELL, //
-					LOOP //
-					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(LOOP, mTrip.getHeadsignId());
 				return true;
 			}
 		} else if (mTrip.getRouteId() == RID_A + 14L) { // A14
