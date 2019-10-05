@@ -98,6 +98,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String A = "A";
 	private static final String B = "B";
 	private static final String F = "F";
+	private static final String S = "S";
 
 	private static final long RID_A = 1_000L;
 	private static final long RID_B = 2_000L;
@@ -106,6 +107,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_CH = 800_000L + RID_C;
 	private static final long RID_F = 6_000L;
 	private static final long RID_R = 18_000L;
+	private static final long RID_S = 19_000L;
 	private static final long RID_RA = 1_800_000L + RID_A;
 	private static final long RID_RR = 1_800_000L + RID_R;
 
@@ -135,6 +137,8 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return RID_B + id;
 			} else if (gRoute.getRouteShortName().startsWith(F)) {
 				return RID_F + id;
+			} else if (gRoute.getRouteShortName().startsWith(S)) {
+				return RID_S + id;
 			}
 		}
 		System.out.printf("\nUnexpected route ID %s!\n", gRoute);
@@ -250,60 +254,63 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getRouteLongName(GRoute gRoute) {
-		if (!Utils.isDigitsOnly(gRoute.getRouteShortName())) {
-			// @formatter:off
-			if (RID_A1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A1;
-			} else if (RID_A2.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A2;
-			} else if (RID_A3.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A3;
-			} else if (RID_A4.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A4;
-			} else if (RID_A5.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A5;
-			} else if (RID_A6.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A6;
-			} else if (RID_A7.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A7;
-			} else if (RID_A8.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A8;
-			} else if (RID_A9.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A9;
-			} else if (RID_A10.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A10;
-			} else if (RID_A11.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A11;
-			} else if (RID_A12.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A12;
-			} else if (RID_A13.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A13;
-			} else if (RID_A14.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A14;
-			} else if (RID_A15.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A15;
-			} else if (RID_A16.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A16;
-			} else if (RID_A21.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A21;
-			} else if (RID_B1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_B1;
-			} else if (RID_F1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_F1;
+		if (StringUtils.isEmpty(gRoute.getRouteLongName())) {
+			if (!Utils.isDigitsOnly(gRoute.getRouteShortName())) {
+				// @formatter:off
+				if (RID_A1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A1;
+				} else if (RID_A2.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A2;
+				} else if (RID_A3.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A3;
+				} else if (RID_A4.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A4;
+				} else if (RID_A5.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A5;
+				} else if (RID_A6.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A6;
+				} else if (RID_A7.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A7;
+				} else if (RID_A8.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A8;
+				} else if (RID_A9.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A9;
+				} else if (RID_A10.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A10;
+				} else if (RID_A11.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A11;
+				} else if (RID_A12.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A12;
+				} else if (RID_A13.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A13;
+				} else if (RID_A14.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A14;
+				} else if (RID_A15.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A15;
+				} else if (RID_A16.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A16;
+				} else if (RID_A21.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A21;
+				} else if (RID_B1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_B1;
+				} else if (RID_F1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_F1;
+				}
+				// @formatter:on
+				if ("C1".equalsIgnoreCase(gRoute.getRouteShortName())) {
+					return RLN_C1;
+				}
+				if ("CH".equalsIgnoreCase(gRoute.getRouteShortName())) {
+					return RLN_CH;
+				}
+				if ("RA".equalsIgnoreCase(gRoute.getRouteShortName())) {
+					return RLN_RA;
+				}
+				if ("RR".equalsIgnoreCase(gRoute.getRouteShortName())) {
+					return RLN_RR;
+				}
+			} else {
+				int rsn = Integer.parseInt(gRoute.getRouteShortName());
+				switch (rsn) {
+				// @formatter:off
+				case 201: return RLN_201;
+				case 202: return RLN_202;
+				case 203: return RLN_203;
+				case 204: return RLN_204;
+				case 205: return RLN_205;
+				case 207: return RLN_207;
+				case 208: return RLN_208;
+				case 209: return RLN_209;
+				case 211: return RLN_211;
+				// @formatter:on
+				}
 			}
-			// @formatter:on
-			if ("C1".equalsIgnoreCase(gRoute.getRouteShortName())) {
-				return RLN_C1;
-			}
-			if ("CH".equalsIgnoreCase(gRoute.getRouteShortName())) {
-				return RLN_CH;
-			}
-			if ("RA".equalsIgnoreCase(gRoute.getRouteShortName())) {
-				return RLN_RA;
-			}
-			if ("RR".equalsIgnoreCase(gRoute.getRouteShortName())) {
-				return RLN_RR;
-			}
-		} else {
-			int rsn = Integer.parseInt(gRoute.getRouteShortName());
-			switch (rsn) {
-			// @formatter:off
-			case 201: return RLN_201;
-			case 202: return RLN_202;
-			case 203: return RLN_203;
-			case 204: return RLN_204;
-			case 205: return RLN_205;
-			case 207: return RLN_207;
-			case 208: return RLN_208;
-			case 209: return RLN_209;
-			case 211: return RLN_211;
-			// @formatter:on
-			}
+			System.out.printf("\nUnexpected route long name %s!\n", gRoute);
+			System.exit(-1);
+			return null;
 		}
-		System.out.printf("\nUnexpected route long name %s!\n", gRoute);
-		System.exit(-1);
-		return null;
+		return super.getRouteLongName(gRoute);
 	}
 
 	private static final String AGENCY_COLOR_GREEN = "4AA942"; // GREEN (from web site CSS)
@@ -357,11 +364,15 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
 						"1439", // <> 103A Av./ 101 St.(EB)
+								"1262", // ==
+								"1673", // !=
+								"1620", // !=
+								"1622", // ==
 								"1989", // <> 107 St./104 Av. (MacEwan) (WB)
 								"1797", // !=
 								"0915", // !=
-								"0959", // <> Village Transit Station
-								"0962", // !=
+								"0959", // <> Village Transit Station =>
+								"0962", // <> Village Transit Station
 								"0971", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
@@ -370,9 +381,13 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"0175", // !=
 								"0959", // <> Village Transit Station
 								"0917", // ==
-								// "6272", // ++
+								"6272", // ++
 								"1426", // !=
 								"1439", // <> 103A Av./ 101 St.(EB)
+								"1262", // ==
+								"1673", // !=
+								"1620", // !=
+								"1622", // ==
 								"1989", // <> 107 St./104 Av. (MacEwan) (WB)
 						})) //
 				.compileBothTripSort());
