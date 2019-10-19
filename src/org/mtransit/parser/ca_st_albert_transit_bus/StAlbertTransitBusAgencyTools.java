@@ -106,13 +106,23 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_C1 = 800_000L + 1L;
 	private static final long RID_CH = 800_000L + RID_C;
 	private static final long RID_F = 6_000L;
+	private static final long RID_N = 14_000L;
 	private static final long RID_R = 18_000L;
 	private static final long RID_S = 19_000L;
 	private static final long RID_RA = 1_800_000L + RID_A;
 	private static final long RID_RR = 1_800_000L + RID_R;
+	private static final long RID_SN = 1_900_000L + RID_N;
 
 	@Override
 	public long getRouteId(GRoute gRoute) {
+		if (StringUtils.isEmpty(gRoute.getRouteShortName())) {
+			if (SNOWFLAKE_FESTIVAL_SHUTTLE.equals(gRoute.getRouteLongName())) {
+				return RID_SN;
+			}
+			System.out.printf("\nUnexpected route ID %s!\n", gRoute);
+			System.exit(-1);
+			return -1L;
+		}
 		if (Utils.isDigitsOnly(gRoute.getRouteShortName())) {
 			return Long.parseLong(gRoute.getRouteShortName());
 		}
@@ -154,6 +164,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			} else if (RID_B1.equals(gRoute.getRouteShortName())) {
 				return "BL";
 			}
+			if (SNOWFLAKE_FESTIVAL_SHUTTLE.equals(gRoute.getRouteLongName())) {
+				return "SN";
+			}
 			if ("C1".equals(gRoute.getRouteShortName())) {
 				return "C1";
 			}
@@ -194,6 +207,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String ENJOY_CENTER = "Enjoy Ctr";
 	private static final String PINEVIEW = "Pineview";
 	private static final String KINGSWOOD = "Kingswood";
+	private static final String SNOWFLAKE_FESTIVAL_SHUTTLE = "Snowflake Festival Shuttle";
 
 	private static final String ST_ALBERT_EXCHANGE_CENTER = ST_ALBERT + " " + EXCHANGE + " Ctr";
 
@@ -218,6 +232,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String RLN_B1 = "Botanical Loop";
 	private static final String RLN_C1 = "Canada Day Shuttle";
 	private static final String RLN_CH = "Children's Festival Shuttle";
+	private static final String RLN_SN = SNOWFLAKE_FESTIVAL_SHUTTLE;
 	private static final String RLN_F1 = "Farmers Mkt Shuttle";
 	private static final String RLN_RA = "Rock n August";
 	private static final String RLN_RR = "Rainmaker Rodeo Shuttle";
