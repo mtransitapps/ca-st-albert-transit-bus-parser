@@ -106,9 +106,11 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_C1 = 800_000L + 1L;
 	private static final long RID_CH = 800_000L + RID_C;
 	private static final long RID_F = 6_000L;
+	private static final long RID_I = 9_000L;
 	private static final long RID_N = 14_000L;
 	private static final long RID_R = 18_000L;
 	private static final long RID_S = 19_000L;
+	private static final long RID_FI = 600_000L + RID_I;
 	private static final long RID_RA = 1_800_000L + RID_A;
 	private static final long RID_RR = 1_800_000L + RID_R;
 	private static final long RID_SN = 1_900_000L + RID_N;
@@ -118,6 +120,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		if (StringUtils.isEmpty(gRoute.getRouteShortName())) {
 			if (SNOWFLAKE_FESTIVAL_SHUTTLE.equals(gRoute.getRouteLongName())) {
 				return RID_SN;
+			}
+			if (FIRE_AND_ICE_FESTIVAL.equals(gRoute.getRouteLongName())) {
+				return RID_FI;
 			}
 			System.out.printf("\nUnexpected route ID %s!\n", gRoute);
 			System.exit(-1);
@@ -167,6 +172,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			if (SNOWFLAKE_FESTIVAL_SHUTTLE.equals(gRoute.getRouteLongName())) {
 				return "SN";
 			}
+			if (FIRE_AND_ICE_FESTIVAL.equals(gRoute.getRouteLongName())) {
+				return "FI";
+			}
 			if ("C1".equals(gRoute.getRouteShortName())) {
 				return "C1";
 			}
@@ -208,6 +216,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String PINEVIEW = "Pineview";
 	private static final String KINGSWOOD = "Kingswood";
 	private static final String SNOWFLAKE_FESTIVAL_SHUTTLE = "Snowflake Festival Shuttle";
+	private static final String FIRE_AND_ICE_FESTIVAL = "Fire and Ice Festival";
 
 	private static final String ST_ALBERT_EXCHANGE_CENTER = ST_ALBERT + " " + EXCHANGE + " Ctr";
 
@@ -518,6 +527,20 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"0113", // ++
 								"0252", // ++
 								"0304", // Enjoy Centre South (NB)
+						})) //
+				.compileBothTripSort());
+		map2.put(RID_FI, new RouteTripSpec(RID_FI, // Fire and Ice Festival
+				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Giroux Rd & Bellerose HS", //
+				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "McKenney Ave & Morgan Cr") //
+				.addTripSort(MDirectionType.NORTH.intValue(), //
+						Arrays.asList(new String[] { //
+						"0332", // McKenney Avenue & Morgan Crescent
+								"0711", // Giroux Rd & Bellerose High Sch
+						})) //
+				.addTripSort(MDirectionType.SOUTH.intValue(), //
+						Arrays.asList(new String[] { //
+						"0711", // Giroux Rd & Bellerose High Sch
+								"0332", // McKenney Avenue & Morgan Crescent
 						})) //
 				.compileBothTripSort());
 		ALL_ROUTE_TRIPS2 = map2;
