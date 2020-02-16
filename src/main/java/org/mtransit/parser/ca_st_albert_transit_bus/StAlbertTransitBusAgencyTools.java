@@ -29,8 +29,8 @@ import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
 import org.mtransit.parser.mt.data.MTripStop;
 
-// https://stalbert.ca/city/transit/rider-tools/open-data-gtfs/
-// https://stalbert.ca/uploads/files-zip/google_transit.zip
+// https://stalbert.ca/city/transit/tools/open-data-gtfs/
+// https://stalbert.ca/site/assets/files/3840/google_transit.zip
 public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
@@ -49,7 +49,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	public void start(String[] args) {
 		System.out.printf("\nGenerating StAT bus data...");
 		long start = System.currentTimeMillis();
-		this.serviceIds = extractUsefulServiceIds(args, this);
+		this.serviceIds = extractUsefulServiceIds(args, this, true);
 		super.start(args);
 		System.out.printf("\nGenerating StAT bus data... DONE in %s.\n", Utils.getPrettyDuration(System.currentTimeMillis() - start));
 	}
@@ -110,7 +110,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final long RID_N = 14_000L;
 	private static final long RID_R = 18_000L;
 	private static final long RID_S = 19_000L;
-	private static final long RID_FI = 600_000L + RID_I;
+	private static final long RID_FA = 600_000L + RID_A;
 	private static final long RID_RA = 1_800_000L + RID_A;
 	private static final long RID_RR = 1_800_000L + RID_R;
 	private static final long RID_SN = 1_900_000L + RID_N;
@@ -122,7 +122,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return RID_SN;
 			}
 			if (FIRE_AND_ICE_FESTIVAL.equals(gRoute.getRouteLongName())) {
-				return RID_FI;
+				return RID_FA;
 			}
 			System.out.printf("\nUnexpected route ID %s!\n", gRoute);
 			System.exit(-1);
@@ -136,6 +136,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		}
 		if ("CH".equalsIgnoreCase(gRoute.getRouteShortName())) {
 			return RID_CH;
+		}
+		if ("FA".equalsIgnoreCase(gRoute.getRouteShortName())) {
+			return RID_FA; // Fire and Ice Festival
 		}
 		if ("RA".equalsIgnoreCase(gRoute.getRouteShortName())) {
 			return RID_RA;
@@ -173,7 +176,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return "SN";
 			}
 			if (FIRE_AND_ICE_FESTIVAL.equals(gRoute.getRouteLongName())) {
-				return "FI";
+				return "FA";
 			}
 			if ("C1".equals(gRoute.getRouteShortName())) {
 				return "C1";
@@ -346,23 +349,6 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		return AGENCY_COLOR;
 	}
 
-	private static final String COLOR_702929 = "702929";
-
-	@Override
-	public String getRouteColor(GRoute gRoute) {
-		if (!Utils.isDigitsOnly(gRoute.getRouteShortName())) {
-			if (RID_B1.equalsIgnoreCase(gRoute.getRouteShortName())) {
-				if ("ecfe25".equalsIgnoreCase(gRoute.getRouteColor())) {
-					return COLOR_702929;
-				}
-			}
-			if ("CH".equalsIgnoreCase(gRoute.getRouteShortName())) {
-				return "231F20";
-			}
-		}
-		return super.getRouteColor(gRoute);
-	}
-
 	@Override
 	public int compareEarly(long routeId, List<MTripStop> list1, List<MTripStop> list2, MTripStop ts1, MTripStop ts2, GStop ts1GStop, GStop ts2GStop) {
 		if (ALL_ROUTE_TRIPS2.containsKey(routeId)) {
@@ -383,20 +369,17 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	static {
 		HashMap<Long, RouteTripSpec> map2 = new HashMap<Long, RouteTripSpec>();
 		map2.put(201L, new RouteTripSpec(201L, //
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, EDMONTON) //
+				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "St Albert", //
+				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Edmonton") //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
-						"1439", // <> 103A Av./ 101 St.(EB)
-								"1262", // ==
-								"1673", // !=
-								"1620", // !=
-								"1622", // ==
-								"1989", // <> 107 St./104 Av. (MacEwan) (WB)
+						"1439", // <> 103A Av./ 101 St.(EB) #Edmonton
+								"1989", // <> 107 St./104 Av. (MacEwan) (WB) #Edmonton
 								"1797", // !=
 								"0915", // !=
-								"0959", // <> Village Transit Station =>
-								"0962", // <> Village Transit Station
+								"0953", // <> Village Transit Station => END
+								"0959", // <> Village Transit Station => Edmonton
+								"0962", // <> Village Transit Station => St-Albert CONTINUE
 								"0971", // St. Albert Centre Exchange
 						})) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
@@ -407,75 +390,65 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"0917", // ==
 								"6272", // ++
 								"1426", // !=
-								"1439", // <> 103A Av./ 101 St.(EB)
-								"1262", // ==
-								"1673", // !=
-								"1620", // !=
-								"1622", // ==
-								"1989", // <> 107 St./104 Av. (MacEwan) (WB)
-						})) //
-				.compileBothTripSort());
-		map2.put(205L, new RouteTripSpec(205L, //
-				0, MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT, //
-				1, MTrip.HEADSIGN_TYPE_STRING, WEST_EDMONTON) //
-				.addTripSort(0, //
-						Arrays.asList(new String[] { //
-						"5011", // West Edmonton Mall Transit Centre
-								"0952", // Village Transit Station
-						})) //
-				.addTripSort(1, //
-						Arrays.asList(new String[] { //
-						"0952", // Village Transit Station
-								"5011", // West Edmonton Mall Transit Centre
+								"1439", // <> 103A Av./ 101 St.(EB) #Edmonton
+								"1989", // <> 107 St./104 Av. (MacEwan) (WB) #Edmonton
 						})) //
 				.compileBothTripSort());
 		map2.put(RID_A + 2L, new RouteTripSpec(RID_A + 2L, // A2
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, HERITAGE_LKS, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION) //
+				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Heritage Lks", //
+				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta") //
 				.addTripSort(MDirectionType.EAST.intValue(), //
 						Arrays.asList(new String[] { //
-						"0956", //
-								"0645", //
-								"0515", //
+						"0956", // Village Transit Station
+								"0645", // ++
+								"0515", // Harwood Dr & Heritage Blvd
 						})) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
 						Arrays.asList(new String[] { //
-						"0515", //
-								"0743", //
-								"0956", //
+						"0515", // Harwood Dr & Heritage Blvd
+								"0743", // ++
+								"0956", // Village Transit Station
 						})) //
 				.compileBothTripSort());
 		map2.put(RID_A + 3L, new RouteTripSpec(RID_A + 3L, // A3
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, GRANDIN, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION) //
+				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Grandin", //
+				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta") //
 				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { "0956", "0041", "0053" })) //
+						Arrays.asList(new String[] { 
+						"0956", // Village Transit Station
+							"0041", //
+							"0053" // SWC Ave & Grandin Village I
+						})) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { "0053", "0061", "0956" })) //
+						Arrays.asList(new String[] { 
+							"0053", // SWC Ave & Grandin Village I
+							"0061", //
+							"0956" // Village Transit Station
+						 })) //
 				.compileBothTripSort());
-		map2.put(RID_A + 4L, new RouteTripSpec(RID_A + 4L, // A4
-				0, MTrip.HEADSIGN_TYPE_STRING, "Clockwise", //
-				1, MTrip.HEADSIGN_TYPE_STRING, StringUtils.EMPTY) //
-				.addTripSort(0, //
-						Arrays.asList(new String[] { //
-						"0953", // Village Transit Station
-								"0129", // !=
-								"0973", // xx St. Albert Centre Exchange
-								"0117", // !=
-								"0703", // !=
-								"0973", // xx St. Albert Centre Exchange
-						})) //
-				.addTripSort(1, //
-						Arrays.asList(new String[] { //
-						/* no stops */
-						})) //
-				.compileBothTripSort());
+		// map2.put(RID_A + 4L, new RouteTripSpec(RID_A + 4L, // A4
+		// 		0, MTrip.HEADSIGN_TYPE_STRING, "Clockwise", //
+		// 		1, MTrip.HEADSIGN_TYPE_STRING, StringUtils.EMPTY) //
+		// 		.addTripSort(0, //
+		// 				Arrays.asList(new String[] { //
+		// 				"0953", // Village Transit Station
+		// 						"0129", // !=
+		// 						"0973", // xx St. Albert Centre Exchange
+		// 						"0117", // !=
+		// 						"0703", // !=
+		// 						"0973", // xx St. Albert Centre Exchange
+		// 				})) //
+		// 		.addTripSort(1, //
+		// 				Arrays.asList(new String[] { //
+		// 				/* no stops */
+		// 				})) //
+		// 		.compileBothTripSort());
 		map2.put(RID_A + 10L, new RouteTripSpec(RID_A + 10L, // A10
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, PINEVIEW) //
+				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta", //
+				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Forest Lawn") //
 				.addTripSort(MDirectionType.EAST.intValue(), //
 						Arrays.asList(new String[] { //
-						"0221", // Franklin Pl./S.W.C. Av.
+						"0221", // Franklin Pl./S.W.C. Av. #ForestLawn
 								"0267", //
 								"0955" // Village Transit Station
 						})) //
@@ -483,73 +456,129 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 						Arrays.asList(new String[] { //
 						"0955", // Village Transit Station
 								"0203", // ==
-								"0205", "0215", // !=
-								"0895", //
-								"0221" // Franklin Pl./S.W.C. Av.
+								"0205", // !=
+								"0215", // !=
+								"0895", // ==
+								"0221" // Franklin Pl./S.W.C. Av. #ForestLawn
 						})) //
 				.compileBothTripSort());
-		map2.put(RID_A + 11L, new RouteTripSpec(RID_A + 11L, // A11
-				0, MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
-				1, MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION) //
-				.addTripSort(0, //
-						Arrays.asList(new String[] { //
-						"0954", // Village Transit Station
-								"0229", // Westwood Dr_SB_NS_Windsor Cres
-								"0972", // St. Albert Centre Exchange
-						})) //
-				.addTripSort(1, //
-						Arrays.asList(new String[] { //
-						"0972", // St. Albert Centre Exchange
-								"0251", // Windsor Cr./Westwood Dr.
-								"0954", // Village Transit Station
-						})) //
-				.compileBothTripSort());
+		// map2.put(RID_A + 11L, new RouteTripSpec(RID_A + 11L, // A11
+		// 		0, MTrip.HEADSIGN_TYPE_STRING, ST_ALBERT_EXCHANGE_CENTER, //
+		// 		1, MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION) //
+		// 		.addTripSort(0, //
+		// 				Arrays.asList(new String[] { //
+		// 				"0954", // Village Transit Station
+		// 						"0229", // Westwood Dr_SB_NS_Windsor Cres
+		// 						"0972", // St. Albert Centre Exchange
+		// 				})) //
+		// 		.addTripSort(1, //
+		// 				Arrays.asList(new String[] { //
+		// 				"0972", // St. Albert Centre Exchange
+		// 						"0251", // Windsor Cr./Westwood Dr.
+		// 						"0954", // Village Transit Station
+		// 				})) //
+		// 		.compileBothTripSort());
 		map2.put(RID_A + 13L, new RouteTripSpec(RID_A + 13L, // A13
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, WOODLANDS, //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION) //
+				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Woodlands", //
+				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta") //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { "0954", "0331", "0575" })) //
+						Arrays.asList(new String[] { 
+							"0954", // Village Transit Station
+							"0331", // ++
+							"0575" // Poirier Ave & Kirkwood Dr
+						 })) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { "0575", "0307", "0954" })) //
+						Arrays.asList(new String[] { 
+							"0575", // Poirier Ave & Kirkwood Dr
+							"0307", // ++
+							"0954" // Village Transit Station
+						 })) //
 				.compileBothTripSort());
-		map2.put(RID_A + 21L, new RouteTripSpec(RID_A + 21L, // A21
-				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION, //
-				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, ENJOY_CENTER) //
-				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
-						"0304", // Enjoy Centre South (NB)
-								"0094", // ++
-								"0953", // Village Transit Station
-						})) //
-				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
-						"0953", // Village Transit Station
-								"0113", // ++
-								"0252", // ++
-								"0304", // Enjoy Centre South (NB)
-						})) //
-				.compileBothTripSort());
-		map2.put(RID_FI, new RouteTripSpec(RID_FI, // Fire and Ice Festival
-				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Giroux Rd & Bellerose HS", //
-				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "McKenney Ave & Morgan Cr") //
-				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"0332", // McKenney Avenue & Morgan Crescent
-								"0711", // Giroux Rd & Bellerose High Sch
-						})) //
-				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { //
-						"0711", // Giroux Rd & Bellerose High Sch
-								"0332", // McKenney Avenue & Morgan Crescent
-						})) //
-				.compileBothTripSort());
+		// map2.put(RID_A + 21L, new RouteTripSpec(RID_A + 21L, // A21
+		// 		MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, VILLAGE_TRANSIT_STATION, //
+		// 		MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, ENJOY_CENTER) //
+		// 		.addTripSort(MDirectionType.EAST.intValue(), //
+		// 				Arrays.asList(new String[] { //
+		// 				"0304", // Enjoy Centre South (NB)
+		// 						"0094", // ++
+		// 						"0953", // Village Transit Station
+		// 				})) //
+		// 		.addTripSort(MDirectionType.WEST.intValue(), //
+		// 				Arrays.asList(new String[] { //
+		// 				"0953", // Village Transit Station
+		// 						"0113", // ++
+		// 						"0252", // ++
+		// 						"0304", // Enjoy Centre South (NB)
+		// 				})) //
+		// 		.compileBothTripSort());
+		// map2.put(RID_FA, new RouteTripSpec(RID_FA, // Fire and Ice Festival
+		// 		MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Giroux Rd & Bellerose HS", //
+		// 		MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "McKenney Ave & Morgan Cr") //
+		// 		.addTripSort(MDirectionType.NORTH.intValue(), //
+		// 				Arrays.asList(new String[] { //
+		// 				"0332", // McKenney Avenue & Morgan Crescent
+		// 						"0711", // Giroux Rd & Bellerose High Sch
+		// 				})) //
+		// 		.addTripSort(MDirectionType.SOUTH.intValue(), //
+		// 				Arrays.asList(new String[] { //
+		// 				"0711", // Giroux Rd & Bellerose High Sch
+		// 						"0332", // McKenney Avenue & Morgan Crescent
+		// 				})) //
+		// 		.compileBothTripSort());
+		// if (true) {
+		// 	map2.clear();
+		// }
 		ALL_ROUTE_TRIPS2 = map2;
+	}
+
+	private static final Pattern STARTS_WITH_A_ = Pattern.compile("(^A)", Pattern.CASE_INSENSITIVE);
+	private static final String STARTS_WITH_A_REPLACEMENT = StringUtils.EMPTY;
+
+	@Override
+	public String cleanStopOriginalId(String gStopId) {
+		gStopId = STARTS_WITH_A_.matcher(gStopId).replaceAll(STARTS_WITH_A_REPLACEMENT);
+		return gStopId;
 	}
 
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
 			return; // split
+		}
+		if (mTrip.getRouteId() == 201L) {
+			if ("St Albert via 118 Ave".equalsIgnoreCase(gTrip.getTripHeadsign())) {
+				mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), MDirectionType.NORTH.intValue());
+				return;
+			}
+			if ("Edmonton via 118 Ave".equalsIgnoreCase(gTrip.getTripHeadsign())
+				|| "MacEwan University via Downtown Edmonton".equalsIgnoreCase(gTrip.getTripHeadsign())) {
+				mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), MDirectionType.SOUTH.intValue());
+				return;
+			}
+			System.out.printf("\n%d: Unexpected trips to set %s!\n", mRoute.getId(), gTrip);
+			System.exit(-1);
+			return;
+		}
+		// if (mTrip.getRouteId() == 203L) {
+		// 	if ("Kingsway TC via Westmount".equalsIgnoreCase(gTrip.getTripHeadsign())
+		// 			|| "Kingsway TC Express".equalsIgnoreCase(gTrip.getTripHeadsign())) {
+		// 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), 0);
+		// 		return;
+		// 	}
+		// 	if ("St Albert via Westmount".equalsIgnoreCase(gTrip.getTripHeadsign())) {
+		// 		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), 1);
+		// 		return;
+		// 	}
+		// }
+		 if (mTrip.getRouteId() == RID_A + 4L) { // A4
+			if (gTrip.getTripHeadsign().endsWith(" Lacombe Park Deer Ridge")) {
+				mTrip.setHeadsignString(cleanTripHeadsign(
+					gTrip.getTripHeadsign().substring(
+						0, 
+						gTrip.getTripHeadsign().length() - " Lacombe Park Deer Ridge".length()
+						)), gTrip.getDirectionId());
+				return;
+			}
 		}
 		if (mTrip.getRouteId() == RID_A + 5L) { // A5
 			if (gTrip.getTripHeadsign().endsWith(" " + "Lacombe Park")) {
@@ -585,6 +614,15 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
 		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
+		if (mTrip.getRouteId() == RID_A + 4L) { // A4
+			if (Arrays.asList( //
+					"Vlg Sta", //
+					"St Albert Ctr" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("St Albert Ctr", mTrip.getHeadsignId());
+				return true;
+			}
+		}
 		if (mTrip.getRouteId() == RID_A + 5L) { // A5
 			if (Arrays.asList( //
 					"Lacombe Pk", //
@@ -595,26 +633,26 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			}
 		} else if (mTrip.getRouteId() == RID_A + 6L) { // A6
 			if (Arrays.asList( //
-					VILLAGE_TRANSIT_STATION, //
-					ST_ALBERT_CENTER //
+					"Vlg Transit Sta", //
+					"St Albert Ctr" //
 					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(ST_ALBERT_CENTER, mTrip.getHeadsignId());
+				mTrip.setHeadsignString("St Albert Ctr", mTrip.getHeadsignId());
 				return true;
 			}
 		} else if (mTrip.getRouteId() == RID_A + 9L) { // A9
 			if (Arrays.asList( //
-					KINGSWOOD, //
-					VILLAGE_TRANSIT_STATION //
+					"Kingswood", //
+					"Vlg Transit Sta" //
 					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(VILLAGE_TRANSIT_STATION, mTrip.getHeadsignId());
+				mTrip.setHeadsignString("Vlg Transit Sta", mTrip.getHeadsignId());
 				return true;
 			}
 		} else if (mTrip.getRouteId() == RID_A + 14L) { // A14
 			if (Arrays.asList( //
-					ST_ALBERT_CENTER, //
-					VILLAGE_TRANSIT_STATION //
+					"St Albert Ctr", //
+					"Vlg Transit Sta" //
 					).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString(VILLAGE_TRANSIT_STATION, mTrip.getHeadsignId());
+				mTrip.setHeadsignString("Vlg Transit Sta", mTrip.getHeadsignId());
 				return true;
 			}
 			if (Arrays.asList( //
@@ -632,19 +670,20 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString("Rodeo", mTrip.getHeadsignId());
 				return true;
 			}
+		} else if (mTrip.getRouteId() == 201L) {
+			if (Arrays.asList( //
+					"MacEwan University", //
+					"Edmonton" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Edmonton", mTrip.getHeadsignId());
+				return true;
+			}
 		} else if (mTrip.getRouteId() == 202L) {
 			if (Arrays.asList( //
 					VILLAGE_TRANSIT_STATION, //
 					"St Albert Ctr Exch" //
 			).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString("St Albert Ctr Exch", mTrip.getHeadsignId());
-				return true;
-			}
-			if (Arrays.asList( //
-					"Kingsway " + TRANSIT_CENTRE_SHORT + " Express", //
-					"Kingsway " + TRANSIT_CENTRE_SHORT //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Kingsway " + TRANSIT_CENTRE_SHORT, mTrip.getHeadsignId());
 				return true;
 			}
 			if (Arrays.asList( //
@@ -656,17 +695,10 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			}
 		} else if (mTrip.getRouteId() == 203L) {
 			if (Arrays.asList( //
-					VILLAGE_TRANSIT_STATION, //
-					"St Albert Ctr Exch" //
+					"Kingsway " + TRANSIT_CENTRE_SHORT, //
+					"St Albert" //
 			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("St Albert Ctr Exch", mTrip.getHeadsignId());
-				return true;
-			}
-			if (Arrays.asList( //
-					"Westmount Transit Ctr", //
-					"Kingsway RAH Transit Ctr" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Kingsway RAH Transit Ctr", mTrip.getHeadsignId());
+				mTrip.setHeadsignString("St Albert", mTrip.getHeadsignId());
 				return true;
 			}
 			if (Arrays.asList( //
@@ -676,20 +708,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString("Kingsway " + TRANSIT_CENTRE_SHORT, mTrip.getHeadsignId());
 				return true;
 			}
-		} else if (mTrip.getRouteId() == 204L) {
-			if (Arrays.asList( //
-					VILLAGE_TRANSIT_STATION, //
-					"St Albert Ctr Exch" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("St Albert Ctr Exch", mTrip.getHeadsignId());
-				return true;
-			}
 		} else if (mTrip.getRouteId() == 208L) {
 			if (Arrays.asList( //
-					VILLAGE_TRANSIT_STATION, //
-					"St Albert Ctr Exch" //
+					"Gov Ctr", // <>
+					"St Albert" //
 			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("St Albert Ctr Exch", mTrip.getHeadsignId());
+				mTrip.setHeadsignString("St Albert", mTrip.getHeadsignId());
 				return true;
 			}
 		}
@@ -712,6 +736,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final Pattern GOVERNMENT_CENTRE = Pattern.compile("(government (centre|center))", Pattern.CASE_INSENSITIVE);
 	private static final String GOVERNMENT_CENTRE_REPLACEMENT = GOV_CTR;
 
+	private static final Pattern ENDS_WITH_EXPRESS_ = Pattern.compile("( express$)", Pattern.CASE_INSENSITIVE);
+	private static final String ENDS_WITH_EXPRESS_REPLACEMENT = StringUtils.EMPTY;
+
 	private static final Pattern TRANSIT_CENTRE_ = Pattern.compile("((^|\\W){1}(transit centre|transit center|tc)(\\W|$){1})", Pattern.CASE_INSENSITIVE);
 	private static final String TRANSIT_CENTRE_REPLACEMENT = "$2" + TRANSIT_CENTRE_SHORT + "$4";
 
@@ -729,6 +756,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		tripHeadsign = GOVERNMENT_CENTRE.matcher(tripHeadsign).replaceAll(GOVERNMENT_CENTRE_REPLACEMENT);
 		tripHeadsign = TRANSIT_CENTRE_.matcher(tripHeadsign).replaceAll(TRANSIT_CENTRE_REPLACEMENT);
 		tripHeadsign = UNIVERSITY_OF_ALBERTA.matcher(tripHeadsign).replaceAll(UNIVERSITY_OF_ALBERTA_REPLACEMENT);
+		tripHeadsign = ENDS_WITH_EXPRESS_.matcher(tripHeadsign).replaceAll(ENDS_WITH_EXPRESS_REPLACEMENT);
 		tripHeadsign = CleanUtils.cleanStreetTypes(tripHeadsign);
 		tripHeadsign = CleanUtils.removePoints(tripHeadsign);
 		return CleanUtils.cleanLabel(tripHeadsign);
@@ -775,6 +803,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public int getStopId(GStop gStop) {
+		if (Utils.isDigitsOnly(gStop.getStopCode())) {
+			return Integer.parseInt(gStop.getStopCode()); // use stop code as stop ID
+		}
 		if (!Utils.isDigitsOnly(gStop.getStopId())) {
 			if ("A".equals(gStop.getStopId())) {
 				return 10000;
