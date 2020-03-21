@@ -376,7 +376,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 						"1439", // <> 103A Av./ 101 St.(EB) #Edmonton
 								"1989", // <> 107 St./104 Av. (MacEwan) (WB) #Edmonton
 								"1797", // !=
-								"0915", // !=
+								"6673", // ==
+								"0597", // !==
+								"0923", // !=
+								"0444", // !==
+								"6161", // !==
+								"0915", // !==
 								"0953", // <> Village Transit Station => END
 								"0959", // <> Village Transit Station => Edmonton
 								"0962", // <> Village Transit Station => St-Albert CONTINUE
