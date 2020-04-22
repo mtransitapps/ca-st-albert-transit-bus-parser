@@ -374,12 +374,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				.addTripSort(MDirectionType.NORTH.intValue(), //
 						Arrays.asList(new String[] { //
 						"1439", // <> 103A Av./ 101 St.(EB) #Edmonton
-								"1989", // <> 107 St./104 Av. (MacEwan) (WB) #Edmonton
+								"1262", // <> ++ #Edmonton
+								"1898", // <> == #Edmonton
+								"1973", // <> != 107 Street & 104 Avenue #Edmonton
+								"1989", // <> != 107 St./104 Av. (MacEwan) (WB) #Edmonton
 								"1797", // !=
 								"6673", // ==
-								"0597", // !==
-								"0923", // !=
-								"0444", // !==
 								"6161", // !==
 								"0915", // !==
 								"0953", // <> Village Transit Station => END
@@ -396,7 +396,10 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 								"6272", // ++
 								"1426", // !=
 								"1439", // <> 103A Av./ 101 St.(EB) #Edmonton
-								"1989", // <> 107 St./104 Av. (MacEwan) (WB) #Edmonton
+								"1262", // <> ++ #Edmonton
+								"1898", // <> == #Edmonton
+								"1973", // <> != 107 Street & 104 Avenue #Edmonton
+								"1989", // <> != 107 St./104 Av. (MacEwan) (WB) #Edmonton
 						})) //
 				.compileBothTripSort());
 		map2.put(RID_A + 2L, new RouteTripSpec(RID_A + 2L, // A2
