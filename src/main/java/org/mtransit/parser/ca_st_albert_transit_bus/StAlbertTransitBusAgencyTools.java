@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.DefaultAgencyTools;
+import org.mtransit.parser.MTLog;
 import org.mtransit.parser.Pair;
 import org.mtransit.parser.SplitUtils;
 import org.mtransit.parser.SplitUtils.RouteTripSpec;
@@ -47,11 +48,19 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void start(String[] args) {
-		System.out.printf("\nGenerating StAT bus data...");
+		MTLog.log("Generating StAT bus data...");
 		long start = System.currentTimeMillis();
+		boolean isNext = "next_".equalsIgnoreCase(args[2]);
+		if (isNext) {
+			setupNext();
+		}
 		this.serviceIds = extractUsefulServiceIds(args, this, true);
 		super.start(args);
-		System.out.printf("\nGenerating StAT bus data... DONE in %s.\n", Utils.getPrettyDuration(System.currentTimeMillis() - start));
+		MTLog.log("Generating StAT bus data... DONE in %s.", Utils.getPrettyDuration(System.currentTimeMillis() - start));
+	}
+
+	public void setupNext() {
+		ALL_ROUTE_TRIPS2.remove(201L);
 	}
 
 	@Override
@@ -124,9 +133,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			if (FIRE_AND_ICE_FESTIVAL.equals(gRoute.getRouteLongName())) {
 				return RID_FA;
 			}
-			System.out.printf("\nUnexpected route ID %s!\n", gRoute);
-			System.exit(-1);
-			return -1L;
+			throw new MTLog.Fatal("Unexpected route ID %s!", gRoute);
 		}
 		if (Utils.isDigitsOnly(gRoute.getRouteShortName())) {
 			return Long.parseLong(gRoute.getRouteShortName());
@@ -159,9 +166,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return RID_S + id;
 			}
 		}
-		System.out.printf("\nUnexpected route ID %s!\n", gRoute);
-		System.exit(-1);
-		return -1L;
+		throw new MTLog.Fatal("Unexpected route ID %s!", gRoute);
 	}
 
 	@Override
@@ -190,9 +195,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			if ("RR".equals(gRoute.getRouteShortName())) {
 				return "RR";
 			}
-			System.out.printf("\nUnexpected route short name %s!\n", gRoute);
-			System.exit(-1);
-			return null;
+			throw new MTLog.Fatal("Unexpected route short name %s!", gRoute);
 		}
 		return super.getRouteShortName(gRoute);
 	}
@@ -333,9 +336,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				// @formatter:on
 				}
 			}
-			System.out.printf("\nUnexpected route long name %s!\n", gRoute);
-			System.exit(-1);
-			return null;
+			throw new MTLog.Fatal("Unexpected route long name %s!", gRoute);
 		}
 		return super.getRouteLongName(gRoute);
 	}
@@ -563,9 +564,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), MDirectionType.SOUTH.intValue());
 				return;
 			}
-			System.out.printf("\n%d: Unexpected trips to set %s!\n", mRoute.getId(), gTrip);
-			System.exit(-1);
-			return;
+			throw new MTLog.Fatal("%d: Unexpected trips to set %s!", mRoute.getId(), gTrip);
 		}
 		// if (mTrip.getRouteId() == 203L) {
 		// 	if ("Kingsway TC via Westmount".equalsIgnoreCase(gTrip.getTripHeadsign())
@@ -670,6 +669,14 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(ST_ALBERT + " North", mTrip.getHeadsignId());
 				return true;
 			}
+		} else if (mTrip.getRouteId() == RID_A + 33L) { // A33
+			if (Arrays.asList( //
+					"Pineview", //
+					"Naki TC" //
+					).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Naki TC", mTrip.getHeadsignId());
+				return true;
+			}
 		} else if (mTrip.getRouteId() == RID_RR) {
 			if (Arrays.asList( //
 					"Rodeo (Parade Detour)", //
@@ -725,9 +732,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return true;
 			}
 		}
-		System.out.printf("\nUnexpected trips to merge %s & %s!\n", mTrip, mTripToMerge);
-		System.exit(-1);
-		return false;
+		throw new MTLog.Fatal("Unexpected trips to merge %s & %s!", mTrip, mTripToMerge);
 	}
 
 	@Override
@@ -838,9 +843,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			} else if ("K".equals(gStop.getStopId())) {
 				return 110000;
 			}
-			System.out.printf("\nUnexpected stop ID for %s!\n", gStop);
-			System.exit(-1);
-			return -1;
+			throw new MTLog.Fatal("Unexpected stop ID for %s!", gStop);
 		}
 		return super.getStopId(gStop);
 	}
