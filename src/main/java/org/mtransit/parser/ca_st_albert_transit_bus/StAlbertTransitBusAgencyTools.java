@@ -19,6 +19,7 @@ import org.mtransit.parser.SplitUtils.RouteTripSpec;
 import org.mtransit.parser.Utils;
 import org.mtransit.parser.gtfs.data.GCalendar;
 import org.mtransit.parser.gtfs.data.GCalendarDate;
+import org.mtransit.parser.gtfs.data.GIDs;
 import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GSpec;
 import org.mtransit.parser.gtfs.data.GStop;
@@ -60,6 +61,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	public void setupNext() {
+		// DO NOTHING
 	}
 
 	@Override
@@ -83,8 +85,13 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		return super.excludeCalendarDate(gCalendarDates);
 	}
 
+	private static final int AGENCY_ID_INT = GIDs.getInt("2"); // St. Albert Transit
+
 	@Override
 	public boolean excludeRoute(GRoute gRoute) {
+		if (gRoute.isDifferentAgency(AGENCY_ID_INT)) {
+			return true; // exclude
+		}
 		return super.excludeRoute(gRoute);
 	}
 
@@ -132,7 +139,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			if (FIRE_AND_ICE_FESTIVAL.equals(gRoute.getRouteLongName())) {
 				return RID_FA;
 			}
-			throw new MTLog.Fatal("Unexpected route ID %s!", gRoute);
+			throw new MTLog.Fatal("Unexpected route ID %s!", gRoute.toStringPlus());
 		}
 		if (Utils.isDigitsOnly(gRoute.getRouteShortName())) {
 			return Long.parseLong(gRoute.getRouteShortName());
@@ -165,7 +172,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				return RID_S + id;
 			}
 		}
-		throw new MTLog.Fatal("Unexpected route ID %s!", gRoute);
+		throw new MTLog.Fatal("Unexpected route ID for %s!", gRoute.toStringPlus());
 	}
 
 	@Override
@@ -372,68 +379,68 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Heritage Lks", //
 				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta") //
 				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
+						Arrays.asList( //
 						"0956", // Village Transit Station
 								"0645", // ++
-								"0515", // Harwood Dr & Heritage Blvd
-						})) //
+								"0515" // Harwood Dr & Heritage Blvd
+						)) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
+						Arrays.asList( //
 						"0515", // Harwood Dr & Heritage Blvd
 								"0743", // ++
-								"0956", // Village Transit Station
-						})) //
+								"0956" // Village Transit Station
+						)) //
 				.compileBothTripSort());
 		map2.put(RID_A + 3L, new RouteTripSpec(RID_A + 3L, // A3
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Grandin", //
 				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta") //
 				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { 
+						Arrays.asList( //
 						"0956", // Village Transit Station
 							"0041", //
 							"0053" // SWC Ave & Grandin Village I
-						})) //
+						)) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { 
+						Arrays.asList( //
 							"0053", // SWC Ave & Grandin Village I
 							"0061", //
 							"0956" // Village Transit Station
-						 })) //
+						 )) //
 				.compileBothTripSort());
 		map2.put(RID_A + 10L, new RouteTripSpec(RID_A + 10L, // A10
 				MDirectionType.EAST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta", //
 				MDirectionType.WEST.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Forest Lawn") //
 				.addTripSort(MDirectionType.EAST.intValue(), //
-						Arrays.asList(new String[] { //
+						Arrays.asList( //
 						"0221", // Franklin Pl./S.W.C. Av. #ForestLawn
 								"0267", //
 								"0955" // Village Transit Station
-						})) //
+						)) //
 				.addTripSort(MDirectionType.WEST.intValue(), //
-						Arrays.asList(new String[] { //
+						Arrays.asList( //
 						"0955", // Village Transit Station
 								"0203", // ==
 								"0205", // !=
 								"0215", // !=
 								"0895", // ==
 								"0221" // Franklin Pl./S.W.C. Av. #ForestLawn
-						})) //
+						)) //
 				.compileBothTripSort());
 		map2.put(RID_A + 13L, new RouteTripSpec(RID_A + 13L, // A13
 				MDirectionType.NORTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Woodlands", //
 				MDirectionType.SOUTH.intValue(), MTrip.HEADSIGN_TYPE_STRING, "Vlg Sta") //
 				.addTripSort(MDirectionType.NORTH.intValue(), //
-						Arrays.asList(new String[] { 
+						Arrays.asList( //
 							"0954", // Village Transit Station
 							"0331", // ++
 							"0575" // Poirier Ave & Kirkwood Dr
-						 })) //
+						 )) //
 				.addTripSort(MDirectionType.SOUTH.intValue(), //
-						Arrays.asList(new String[] { 
+						Arrays.asList( //
 							"0575", // Poirier Ave & Kirkwood Dr
 							"0307", // ++
 							"0954" // Village Transit Station
-						 })) //
+						 )) //
 				.compileBothTripSort());
 		ALL_ROUTE_TRIPS2 = map2;
 	}
