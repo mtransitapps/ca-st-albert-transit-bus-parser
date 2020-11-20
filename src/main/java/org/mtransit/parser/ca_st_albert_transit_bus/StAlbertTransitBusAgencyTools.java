@@ -603,13 +603,14 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		} else if (mTrip.getRouteId() == 203L) {
 			if (Arrays.asList( //
 					"Kingsway " + TRANSIT_CENTRE_SHORT, //
-					"St Albert" //
+					ST_ALBERT //
 			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("St Albert", mTrip.getHeadsignId());
+				mTrip.setHeadsignString(ST_ALBERT, mTrip.getHeadsignId());
 				return true;
 			}
 			if (Arrays.asList( //
 					"Westmount " + TRANSIT_CENTRE_SHORT, //
+					"U Of A", //
 					"Kingsway " + TRANSIT_CENTRE_SHORT //
 			).containsAll(headsignsValues)) {
 				mTrip.setHeadsignString("Kingsway " + TRANSIT_CENTRE_SHORT, mTrip.getHeadsignId());
