@@ -2,13 +2,12 @@ package org.mtransit.parser.ca_st_albert_transit_bus;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mtransit.parser.CleanUtils;
+import org.mtransit.commons.CharUtils;
+import org.mtransit.commons.CleanUtils;
+import org.mtransit.commons.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.MTLog;
-import org.mtransit.parser.StringUtils;
-import org.mtransit.parser.Utils;
-import org.mtransit.parser.gtfs.data.GCalendar;
-import org.mtransit.parser.gtfs.data.GCalendarDate;
+import org.mtransit.parser.gtfs.data.GAgency;
 import org.mtransit.parser.gtfs.data.GIDs;
 import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GSpec;
@@ -18,7 +17,6 @@ import org.mtransit.parser.mt.data.MAgency;
 import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,68 +24,32 @@ import java.util.regex.Pattern;
 import static org.mtransit.parser.StringUtils.EMPTY;
 
 // https://stalbert.ca/city/transit/tools/open-data-gtfs/
-// https://stalbert.ca/site/assets/files/3840/google_transit.zip
+// https://gtfs.edmonton.ca/TMGTFSRealTimeWebService/GTFS/GTFS.zip
 public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
-	public static void main(@Nullable String[] args) {
-		if (args == null || args.length == 0) {
-			args = new String[3];
-			args[0] = "input/gtfs.zip";
-			args[1] = "../../mtransitapps/ca-st-albert-transit-bus-android/res/raw/";
-			args[2] = ""; // files-prefix
-		}
+	public static void main(@NotNull String[] args) {
 		new StAlbertTransitBusAgencyTools().start(args);
 	}
 
-	@Nullable
-	private HashSet<Integer> serviceIdInts;
-
+	@NotNull
 	@Override
-	public void start(@NotNull String[] args) {
-		MTLog.log("Generating StAT bus data...");
-		long start = System.currentTimeMillis();
-		this.serviceIdInts = extractUsefulServiceIdInts(args, this, true);
-		super.start(args);
-		MTLog.log("Generating StAT bus data... DONE in %s.", Utils.getPrettyDuration(System.currentTimeMillis() - start));
+	public String getAgencyName() {
+		return "St AT";
 	}
 
 	@Override
-	public boolean excludingAll() {
-		return this.serviceIdInts != null && this.serviceIdInts.isEmpty();
-	}
-
-	@Override
-	public boolean excludeCalendar(@NotNull GCalendar gCalendar) {
-		if (this.serviceIdInts != null) {
-			return excludeUselessCalendarInt(gCalendar, this.serviceIdInts);
-		}
-		return super.excludeCalendar(gCalendar);
-	}
-
-	@Override
-	public boolean excludeCalendarDate(@NotNull GCalendarDate gCalendarDates) {
-		if (this.serviceIdInts != null) {
-			return excludeUselessCalendarDateInt(gCalendarDates, this.serviceIdInts);
-		}
-		return super.excludeCalendarDate(gCalendarDates);
+	public boolean defaultExcludeEnabled() {
+		return true;
 	}
 
 	private static final int AGENCY_ID_INT = GIDs.getInt("2"); // St. Albert Transit
 
 	@Override
-	public boolean excludeRoute(@NotNull GRoute gRoute) {
-		if (gRoute.isDifferentAgency(AGENCY_ID_INT)) {
-			return true; // exclude
+	public boolean excludeAgency(@NotNull GAgency gAgency) {
+		if (gAgency.getAgencyIdInt() != AGENCY_ID_INT) {
+			return EXCLUDE;
 		}
-		return super.excludeRoute(gRoute);
-	}
-
-	@Override
-	public boolean excludeTrip(@NotNull GTrip gTrip) {
-		if (this.serviceIdInts != null) {
-			return excludeUselessTripInt(gTrip, this.serviceIdInts);
-		}
-		return super.excludeTrip(gTrip);
+		return super.excludeAgency(gAgency);
 	}
 
 	@NotNull
@@ -128,7 +90,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 			}
 			throw new MTLog.Fatal("Unexpected route ID %s!", gRoute.toStringPlus());
 		}
-		if (Utils.isDigitsOnly(gRoute.getRouteShortName())) {
+		if (CharUtils.isDigitsOnly(gRoute.getRouteShortName())) {
 			return Long.parseLong(gRoute.getRouteShortName());
 		}
 		if ("C1".equalsIgnoreCase(gRoute.getRouteShortName())) {
@@ -146,9 +108,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 		if ("RR".equalsIgnoreCase(gRoute.getRouteShortName())) {
 			return RID_RR;
 		}
-		Matcher matcher = DIGITS.matcher(gRoute.getRouteShortName());
+		final Matcher matcher = DIGITS.matcher(gRoute.getRouteShortName());
 		if (matcher.find()) {
-			long id = Long.parseLong(matcher.group());
+			final long id = Long.parseLong(matcher.group());
 			if (gRoute.getRouteShortName().startsWith(A)) {
 				return RID_A + id;
 			} else if (gRoute.getRouteShortName().startsWith(B)) {
@@ -271,7 +233,7 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public String getRouteLongName(@NotNull GRoute gRoute) {
 		if (StringUtils.isEmpty(gRoute.getRouteLongName())) {
-			if (!Utils.isDigitsOnly(gRoute.getRouteShortName())) {
+			if (!CharUtils.isDigitsOnly(gRoute.getRouteShortName())) {
 				// @formatter:off
 				if (RID_A1.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A1;
 				} else if (RID_A2.equalsIgnoreCase(gRoute.getRouteShortName())) { return RLN_A2;
@@ -429,12 +391,12 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public int getStopId(@NotNull GStop gStop) {
-		if (Utils.isDigitsOnly(gStop.getStopCode())) {
+		if (CharUtils.isDigitsOnly(gStop.getStopCode())) {
 			return Integer.parseInt(gStop.getStopCode()); // use stop code as stop ID
 		}
 		//noinspection deprecation
 		final String stopId = gStop.getStopId();
-		if (!Utils.isDigitsOnly(stopId)) {
+		if (!CharUtils.isDigitsOnly(stopId)) {
 			switch (stopId) {
 			case "A":
 				return 10_000;
