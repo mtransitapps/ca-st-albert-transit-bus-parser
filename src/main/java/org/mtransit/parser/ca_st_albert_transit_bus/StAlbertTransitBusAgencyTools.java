@@ -310,21 +310,21 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	@Override
-	public void setTripHeadsign(@NotNull MRoute mRoute, @NotNull MTrip mTrip, @NotNull GTrip gTrip, @NotNull GSpec gtfs) {
-		mTrip.setHeadsignString(
-				cleanTripHeadsign(gTrip.getTripHeadsignOrDefault()),
-				gTrip.getDirectionIdOrDefault()
-		);
+	public boolean directionSplitterEnabled() {
+		return true; // ALLOWED
+	}
+
+	@Override
+	public boolean directionSplitterEnabled(long routeId) {
+		if (routeId == 21L + RID_A) {
+			return true; // ENABLED
+		}
+		return false; // DISABLED
 	}
 
 	@Override
 	public boolean directionFinderEnabled() {
 		return true;
-	}
-
-	@Override
-	public boolean mergeHeadsign(@NotNull MTrip mTrip, @NotNull MTrip mTripToMerge) {
-		throw new MTLog.Fatal("Unexpected trips to merge %s & %s!", mTrip, mTripToMerge);
 	}
 
 	private static final Pattern ENDS_WITH_EXPRESS_ = Pattern.compile("( express$)", Pattern.CASE_INSENSITIVE);
