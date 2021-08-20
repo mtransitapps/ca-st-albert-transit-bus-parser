@@ -316,9 +316,6 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public boolean directionSplitterEnabled(long routeId) {
-		if (routeId == 21L + RID_A) {
-			return true; // ENABLED
-		}
 		return false; // DISABLED
 	}
 
