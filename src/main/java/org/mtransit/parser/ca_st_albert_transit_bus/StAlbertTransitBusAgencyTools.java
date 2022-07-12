@@ -94,16 +94,6 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	@Override
-	public boolean directionSplitterEnabled() {
-		return true; // ALLOWED
-	}
-
-	@Override
-	public boolean directionSplitterEnabled(long routeId) {
-		return false; // DISABLED
-	}
-
-	@Override
 	public boolean directionFinderEnabled() {
 		return true;
 	}
