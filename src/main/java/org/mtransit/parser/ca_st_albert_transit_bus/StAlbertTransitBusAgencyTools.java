@@ -6,9 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mtransit.commons.CharUtils;
 import org.mtransit.commons.CleanUtils;
+import org.mtransit.commons.FeatureFlags;
 import org.mtransit.commons.StringUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.MTLog;
+import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.mt.data.MAgency;
 
@@ -16,8 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-// https://stalbert.ca/city/transit/tools/open-data-gtfs/
-// https://gtfs.edmonton.ca/TMGTFSRealTimeWebService/GTFS/GTFS.zip
+// https://data.edmonton.ca/Transit/ETS-Bus-Schedule-GTFS-Data-Schedules-zipped-files/urjq-fvmq
 public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(@NotNull String[] args) {
@@ -61,6 +62,15 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@Override
 	public boolean useRouteShortNameForRouteId() {
 		return true;
+	}
+
+	@Override
+	public @NotNull String getRouteShortName(@NotNull GRoute gRoute) {
+		if (FeatureFlags.F_USE_GTFS_ID_HASH_INT) {
+			return super.getRouteShortName(gRoute);
+		}
+		//noinspection deprecation
+		return gRoute.getRouteId(); // used by GTFS-RT
 	}
 
 	@Override
@@ -129,9 +139,9 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	private static final Pattern STARTS_WITH_STOP_CODE = Pattern.compile("(" //
-			+ "^[0-9]{4,5}[\\s]*-[\\s]*" //
+			+ "^[0-9]{4,5}\\s*-\\s*" //
 			+ "|" //
-			+ "^[A-Z][\\s]*-[\\s]*" //
+			+ "^[A-Z]\\s*-\\s*" //
 			+ ")", Pattern.CASE_INSENSITIVE);
 
 	@NotNull
@@ -152,12 +162,16 @@ public class StAlbertTransitBusAgencyTools extends DefaultAgencyTools {
 	@NotNull
 	@Override
 	public String getStopCode(@NotNull GStop gStop) {
-		if (StringUtils.isEmpty(gStop.getStopCode())
-				|| "0".equals(gStop.getStopCode())) {
-			//noinspection deprecation
-			return gStop.getStopId();
+		if (FeatureFlags.F_USE_GTFS_ID_HASH_INT) {
+			if (StringUtils.isEmpty(gStop.getStopCode())
+					|| "0".equals(gStop.getStopCode())) {
+				//noinspection deprecation
+				return gStop.getStopId(); // used by GTFS-RT
+			}
+			return super.getStopCode(gStop);
 		}
-		return super.getStopCode(gStop);
+		//noinspection deprecation
+		return gStop.getStopId(); // used by GTFS-RT
 	}
 
 	@Override
